@@ -1,0 +1,19 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "keywords": [
+    "api",
+    "mongoos"
+  ],
+  "author": "",
+  "license": "ISC",
+  "description": "this is the api for backend",
+  "dependencies": {
+    "express": "^4.21.2",
+    "mongoose": "^8.9.4"
+  }
+}
