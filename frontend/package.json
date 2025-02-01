@@ -16,6 +16,10 @@
     "formik": "^2.4.6",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "react-icons": "^5.4.0",
+    "react-quill": "^2.0.0",
+    "react-router-dom": "^6.29.0",
+    "react-select": "^5.10.0",
     "yup": "^1.6.1"
   },
   "devDependencies": {
