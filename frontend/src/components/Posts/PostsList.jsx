@@ -14,12 +14,16 @@ const PostsList = () => {
       });
       //delete
 
-      const deletehandle = async (postId)=>{
-        postMutation.mutateAsync(postId).then(()=>{
-        refetch();
-        }).catch((error)=>console.log(error));
-        
-      }
+      const deletehandle = async (postId) => {
+        try {
+            const response = await postMutation.mutateAsync(postId);
+            console.log("Delete response:", response); // ✅ Log response
+            refetch();
+        } catch (error) {
+            console.error("Delete error:", error.response?.data || error.message); // ✅ Better error logging
+        }
+    };
+    
   return (
     <div>
       {isLoading && <p>Loading...</p>}
@@ -29,8 +33,9 @@ const PostsList = () => {
       {data?.posts.map((post)=>{
         return(
             <div key={post._id} style={{ border: '1px solid #ddd', padding: '10px', marginBottom: '10px' }}>
-            <h2>{post.title}</h2>
-            <p>{post.description}</p>
+            <div
+            dangerouslySetInnerHTML={{__html:post?.description}}
+            />
             <Link to={`/posts/${post?._id}`}>
             <button>Edit post</button>
             </Link>

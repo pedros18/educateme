@@ -1,10 +1,12 @@
 import { Mutation, useMutation } from '@tanstack/react-query';
 import { useFormik } from 'formik';
-import React from 'react';
+import React, { useState } from 'react';
 import * as Yup from 'yup';
 import { createPostAPI } from '../../services/posts/postsAPI';
-
+import ReactQuill from 'react-quill';
+import "react-quill/dist/quill.snow.css"
 const CreatePost = () => {
+  const [description,setdescription] = useState('');
   const postMutation = useMutation({
     mutationKey: ['create-post'],
     mutationFn: createPostAPI,
@@ -19,16 +21,13 @@ const CreatePost = () => {
   // Formik hook for form management
   const formik = useFormik({
     initialValues: {
-      title: '',
       description: '', },
     validationSchema: Yup.object({
-      title: Yup.string().required('Title is required'),
       description: Yup.string().required('Description is required'),
     }),
     onSubmit: async (values) => {
 
   const postData = {
-    title: values.title,
     description: values.description,
     };
 
@@ -50,35 +49,15 @@ const error = postMutation.error;
       {isSuccess && <p>Post created successfully</p>}
       {isError && <p>{error.message}</p>}
       <form onSubmit={formik.handleSubmit}>
-        {/* Title Input */}
-        <div>
-          <label htmlFor="title">Title</label>
-          <input
-            type="text"
-            name="title"
-            id="title"
-            placeholder="Enter title"
-            {...formik.getFieldProps('title')}
-          />
-          {formik.touched.title && formik.errors.title && (
-            <span style={{ color: 'red' }}>{formik.errors.title}</span>
-          )}
-        </div>
-
-        {/* Description Input */}
-        <div>
-          <label htmlFor="description">Description</label>
-          <input
-            type="text"
-            name="description"
-            id="description"
-            placeholder="Enter description"
-            {...formik.getFieldProps('description')}
-          />
+         <ReactQuill 
+         value={formik.values.description}
+         onChange={(value)=>{
+          setdescription(value);
+          formik.setFieldValue("description",value);
+         }}/>
           {formik.touched.description && formik.errors.description && (
             <span style={{ color: 'red' }}>{formik.errors.description}</span>
           )}
-        </div>
 
         {/* Submit Button */}
         <div>

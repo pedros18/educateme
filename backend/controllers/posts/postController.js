@@ -1,18 +1,13 @@
+const mongoose = require("mongoose"); // ✅ Fix: Import mongoose
 const expressAsyncHandler = require("express-async-handler");
 const Post = require("../../models/Post/Post");
 
 const postController = {
     //create post
     createPost: expressAsyncHandler(async (req, res) => {
-        const { title, description } = req.body;
+        const { description } = req.body;
     
-        // Check if a post with the same title already exists
-        const postFound = await Post.findOne({ title });
-        if (postFound) {
-          throw new Error("Post already exists");
-        }
-    
-        const newPost = await Post.create({ title, description });
+        const newPost = await Post.create({ description });
         res.json({ status: "success", message: "Post created successfully", postCreated: newPost });
     }),
     //list all posts
@@ -58,20 +53,16 @@ const postController = {
         res.json({ message: "Post updated successfully", updatedPost });
     }),
     //delete post
-    deletePost:expressAsyncHandler(async (req, res) => {
-        const postId = req.params.postId;
-    
-        // Validate if postId is a valid ObjectId
+    deletePost: expressAsyncHandler(async (req, res) => {
+        const { postId } = req.params;
         if (!mongoose.Types.ObjectId.isValid(postId)) {
-          return res.status(400).json({ message: "Invalid post ID" });
+            return res.status(400).json({ status: "error", message: "Invalid post ID" });
         }
-    
         const postDeleted = await Post.findByIdAndDelete(postId);
         if (!postDeleted) {
-          return res.status(404).json({ message: "Post not found" });
+            return res.status(404).json({ status: "error", message: "Post not found" });
         }
-    
-        res.json({ status: "success", message: "Post deleted successfully", postDeleted });
+        res.json({ status: "success", message: "Post deleted successfully", postId });
     }),
 }
 module.exports = postController;
